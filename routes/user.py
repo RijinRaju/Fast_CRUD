@@ -6,6 +6,10 @@ from schemas.main import User
 user = APIRouter()
 
 
+@user.get('/')
+async def read_all_data():
+    return conn.execute(users.select()).fetchall()
+
 
 @user.get('/read/{id}')
 async def read_data(id: int):
@@ -14,12 +18,9 @@ async def read_data(id: int):
 
 @user.post('/create')
 async def write_data(user: User):
-    dict_user = dict(user)
-    conn.execute(users.insert().values(
-        username=dict_user['username'],
-        email=dict_user['email'],
-        password=dict_user['password']
-    ))
+    print(user)
+    conn.execute(users.insert().values(username=user.username,
+                 email=user.email, password=user.password))
     return conn.execute(users.select()).fetchall()
 
 
